@@ -66,6 +66,49 @@ const MOCK_DEALS: Deal[] = [
   },
 ];
 
+const TIER_ROWS = [
+  {
+    id: 0,
+    name: "No Tier",
+    minStake: "0 RIBX",
+    focus: "Observer",
+    benefits:
+      "Public overview only. No access to detailed analytics or allocations.",
+  },
+  {
+    id: 1,
+    name: "Bronze",
+    minStake: "2,500 RIBX",
+    focus: "Discovery",
+    benefits:
+      "Access to basic analytics, trend dashboards and early deal previews.",
+  },
+  {
+    id: 2,
+    name: "Silver",
+    minStake: "10,000 RIBX",
+    focus: "Curated Deals",
+    benefits:
+      "Full investment memos, enhanced analytics and curated deal flow visibility.",
+  },
+  {
+    id: 3,
+    name: "Gold",
+    minStake: "50,000 RIBX",
+    focus: "Priority Allocation",
+    benefits:
+      "Priority access to live allocations, deeper data rooms and allocation signals.",
+  },
+  {
+    id: 4,
+    name: "Platinum",
+    minStake: "100,000 RIBX",
+    focus: "Institutional Class",
+    benefits:
+      "Co-invest style rights, full data room access and governance participation.",
+  },
+];
+
 export default function RealEstatePage() {
   const { isConnected } = useWallet();
   const { stakedBalance, tier, isLoading } = useRibxBalances();
@@ -136,6 +179,105 @@ export default function RealEstatePage() {
           <button className="rounded-full border border-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-ribx-grey-200 hover:bg-white/5">
             Download Sample IM (Soon)
           </button>
+        </div>
+      </section>
+
+            {/* Tier explainer */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between gap-4">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.16em]">
+            RIBX Access Tiers – Thresholds &amp; Portal Benefits
+          </h2>
+          <p className="text-xs text-ribx-grey-400">
+            Thresholds are defined in the staking contract and enforced on-chain.
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {TIER_ROWS.map((row) => {
+            const isCurrent = row.id === tier;
+
+            return (
+              <article
+                key={row.id}
+                className={[
+                  "relative flex flex-col gap-3 rounded-2xl border bg-ribx-bg-elevated p-4 text-xs",
+                  "border-white/10",
+                  isCurrent ? "border-ribx-gold shadow-[0_0_0_1px_rgba(255,215,128,0.35)]" : "",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+              >
+                {/* Tier badge + icon */}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-ribx-gold/80 to-ribx-gold-soft/60 text-[14px] text-ribx-bg">
+                      {row.id === 0
+                        ? "—"
+                        : row.id === 1
+                        ? "Ⅰ"
+                        : row.id === 2
+                        ? "Ⅱ"
+                        : row.id === 3
+                        ? "Ⅲ"
+                        : "Ⅳ"}
+                    </div>
+                    <div>
+                      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ribx-cream">
+                        {row.name}
+                      </p>
+                      <p className="text-[10px] text-ribx-grey-500">
+                        {row.focus}
+                      </p>
+                    </div>
+                  </div>
+
+                  {isCurrent && (
+                    <span className="rounded-full bg-ribx-gold/15 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-ribx-gold">
+                      Current Tier
+                    </span>
+                  )}
+                </div>
+
+                {/* Min stake */}
+                <div className="rounded-xl border border-white/5 bg-ribx-bg px-3 py-2">
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-ribx-grey-500">
+                    Minimum Staked
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-ribx-cream">
+                    {row.minStake}
+                  </p>
+                </div>
+
+                {/* Benefits */}
+                <div className="space-y-2">
+                  <p className="text-[10px] uppercase tracking-[0.16em] text-ribx-grey-500">
+                    Portal Benefits
+                  </p>
+                  <p className="text-[11px] leading-relaxed text-ribx-grey-300">
+                    {row.benefits}
+                  </p>
+                </div>
+
+                {/* CTA hint */}
+                {row.id > tier && row.id !== 0 && (
+                  <p className="mt-2 text-[10px] text-ribx-grey-400">
+                    Stake enough RIBX to reach{" "}
+                    <span className="font-semibold text-ribx-cream">
+                      {row.name}
+                    </span>{" "}
+                    and unlock these benefits.
+                  </p>
+                )}
+                {isCurrent && row.id > 0 && (
+                  <p className="mt-2 text-[10px] text-ribx-gold">
+                    You already qualify for this tier. Upcoming allocations and
+                    analytics will reflect this level.
+                  </p>
+                )}
+              </article>
+            );
+          })}
         </div>
       </section>
 
@@ -276,7 +418,8 @@ export default function RealEstatePage() {
                   </div>
 
                   <p className="text-xs text-ribx-grey-400">
-                    Higher-tier members see full analytics, documentation and allocation terms for this deal.
+                    Higher-tier members see full analytics, documentation and
+                    allocation terms for this deal.
                   </p>
                 </div>
 
