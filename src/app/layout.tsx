@@ -2,7 +2,8 @@
 import React from "react";
 import Link from "next/link";
 import "./globals.css";
-import { Web3Providers } from "./providers";
+import { AppProviders } from "./providers";
+import { WalletConnectButton } from "@/components/WalletConnectButton";
 
 export const metadata = {
   title: "RIBX – Real Estate • DeFi • GameFi",
@@ -20,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-ribx-bg text-ribx-cream font-body">
-        <Web3Providers>
+        <AppProviders>
           {/* NAVBAR */}
           <header className="sticky top-0 z-40 border-b border-white/5 bg-ribx-bg/80 backdrop-blur">
             <div className="mx-auto flex max-w-container items-center justify-between px-4 py-4">
@@ -68,14 +69,15 @@ export default function RootLayout({
               </nav>
 
               <div className="flex items-center gap-3">
-                {/* Your Header.tsx can also be rendered here instead */}
-                <button className="hidden rounded-full border border-ribx-gold px-4 py-2 text-xs font-semibold text-ribx-gold hover:bg-ribx-gold/10 md:inline-flex">
-                  Connect Wallet
-                </button>
+                {/* Real web3 connect button */}
+                <div className="hidden md:inline-flex">
+                  <WalletConnectButton />
+                </div>
                 <button className="rounded-full bg-ribx-gold px-4 py-2 text-xs font-semibold text-ribx-bg hover:bg-ribx-gold-soft">
                   Launch App
                 </button>
               </div>
+
             </div>
           </header>
 
@@ -104,7 +106,7 @@ export default function RootLayout({
               </div>
             </div>
           </footer>
-        </Web3Providers>
+        </AppProviders>
       </body>
     </html>
   );

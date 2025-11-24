@@ -2,18 +2,30 @@
 
 import Link from "next/link";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { injected } from "wagmi/connectors";
 
 export function Header() {
   const { address, isConnected } = useAccount();
-  const { connect, isPending: connectPending } = useConnect({
-    connector: injected(),
-  });
+
+  // ✅ useConnect gives us `connectors` array
+  const { connect, connectors, isPending: connectPending } = useConnect();
   const { disconnect } = useDisconnect();
 
   const shortAddress = address
     ? `${address.slice(0, 6)}...${address.slice(-4)}`
     : "";
+
+  const handleConnect = () => {
+    // pick the injected connector if available
+    const injectedConnector =
+      connectors.find((c) => c.id === "injected") ?? connectors[0];
+
+    if (!injectedConnector) {
+      console.error("No wallet connector available");
+      return;
+    }
+
+    connect({ connector: injectedConnector });
+  };
 
   return (
     <header className="border-b border-white/10">
@@ -32,7 +44,6 @@ export function Header() {
           <Link href="/staking" className="hover:text-white">
             Staking
           </Link>
-          {/* You can add /real-estate, /gamefi later */}
         </nav>
 
         <div>
@@ -45,7 +56,7 @@ export function Header() {
             </button>
           ) : (
             <button
-              onClick={() => connect()}
+              onClick={handleConnect}
               className="rounded-full bg-yellow-400 px-4 py-1 text-xs font-semibold text-black hover:bg-yellow-300 disabled:opacity-70"
               disabled={connectPending}
             >

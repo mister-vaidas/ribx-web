@@ -63,14 +63,16 @@ export function useRibxBalances() {
       ? formatUnits(walletBalanceRaw, decimals)
       : "0";
 
+  // Use BigInt(0) instead of 0n to avoid BigInt literal (ES2020+) requirement
   const stakedAmountRaw =
-    userInfo && Array.isArray(userInfo) ? (userInfo[0] as bigint) : 0n;
+    userInfo && Array.isArray(userInfo)
+      ? (userInfo[0] as bigint)
+      : BigInt(0);
+
   const stakedBalance = formatUnits(stakedAmountRaw, decimals);
 
   const pendingRewards =
-    typeof pendingRaw === "bigint"
-      ? formatUnits(pendingRaw, decimals)
-      : "0";
+    typeof pendingRaw === "bigint" ? formatUnits(pendingRaw, decimals) : "0";
 
   const tier =
     typeof tierRaw === "number" || typeof tierRaw === "bigint"
